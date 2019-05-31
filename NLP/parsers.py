@@ -20,12 +20,15 @@ class MeduzaParser(BaseParser):
         cur_page = 1
 
         while count > 0:
-            page_news = self.get_page_data(page=cur_page,
-                                           url=self.url,
-                                           user_agent=self.USER_AGENT)
-            news.extend(page_news)
-            count -= len(page_news)
-            cur_page += 1
+            try:
+                page_news = self.get_page_data(page=cur_page,
+                                            url=self.url,
+                                            user_agent=self.USER_AGENT)
+                news.extend(page_news)
+                count -= len(page_news)
+                cur_page += 1
+            except:
+                print("problem in parse meduza news")
 
         return news
 
@@ -103,11 +106,14 @@ class AifParser(BaseParser):
 
         while count > 0:
             for rubric in self.rubrics:
-                page_news = self.get_page_data(rubric=rubric,
-                                               page=cur_page,
-                                               user_agent=self.USER_AGENT)
-                news.extend(page_news)
-                count -= len(page_news)
+                try:
+                    page_news = self.get_page_data(rubric=rubric,
+                                                page=cur_page,
+                                                user_agent=self.USER_AGENT)
+                    news.extend(page_news)
+                    count -= len(page_news)
+                except:
+                    print("problem in parse aif news")
             cur_page += 1
 
         return news

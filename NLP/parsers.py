@@ -3,6 +3,7 @@ from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 from unicodedata2 import normalize
+import traceback
 
 class BaseParser():
 
@@ -13,7 +14,9 @@ class BaseParser():
 
 class MeduzaParser(BaseParser):
 
-    url = 'https://meduza.io/api/v3/search?chrono=news&page={page}&per_page=30&locale=ru'
+    url = 'https://meduza.io/api/v3/search?chrono=news&locale=ru&page={page}&per_page=24'
+
+    
 
     def parse_news(self, count=5000):
         news = []
@@ -22,13 +25,13 @@ class MeduzaParser(BaseParser):
         while count > 0:
             try:
                 page_news = self.get_page_data(page=cur_page,
-                                            url=self.url,
-                                            user_agent=self.USER_AGENT)
+                                               url=self.url,
+                                               user_agent=self.USER_AGENT)
                 news.extend(page_news)
                 count -= len(page_news)
                 cur_page += 1
             except:
-                print("problem in parse meduza news")
+                traceback.print_exc()
 
         return news
 
@@ -59,7 +62,13 @@ class MeduzaParser(BaseParser):
                 
                 author = page_content.find("time").parent.parent
                 author = author.find_all("div", recursive=False)[1]
-                author = author.find("a").text
+                try:
+                    author = author.find("a").text
+                except:
+                    if "Meduza" in author.text:
+                        author = "Meduza"
+                    else:
+                        author = author.text
 
                 entry = {"author": author,
                          "title" : title,
@@ -108,12 +117,13 @@ class AifParser(BaseParser):
             for rubric in self.rubrics:
                 try:
                     page_news = self.get_page_data(rubric=rubric,
-                                                page=cur_page,
-                                                user_agent=self.USER_AGENT)
+                                                   page=cur_page,
+                                                   user_agent=self.USER_AGENT)
                     news.extend(page_news)
                     count -= len(page_news)
                 except:
-                    print("problem in parse aif news")
+                    pass
+                print(f'\rcount: {count}', end="")
             cur_page += 1
 
         return news
@@ -121,8 +131,8 @@ class AifParser(BaseParser):
     def get_page_data(self, rubric, page, user_agent):
         headers = {'User-agent' : user_agent}
         page_responce = requests.post(self.base_url.format(rubric=rubric),
-                                 headers=headers,
-                                 json={"page": page})
+                                      headers=headers,
+                                      data={"page": page})
 
         page_content = BeautifulSoup(page_responce.content, "html.parser")
     

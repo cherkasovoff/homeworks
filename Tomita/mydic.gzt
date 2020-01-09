@@ -1,0 +1,22 @@
+encoding "utf8";
+
+import "base.proto";
+import "articles_base.proto";
+
+import "facttypes.proto";
+
+TAuxDicArticle "альбом"
+{
+    key = { "tomita:albums.cxx" type=CUSTOM }
+} 
+
+TAuxDicArticle "month"
+{
+    key = "январь" | "февраль" | "март" | "апрель" | "май" | "июнь" |
+          "июль" | "август" |   "сентябрь" | "октябрь" | "ноябрь" | "декабрь"
+}
+
+TAuxDicArticle "singer"
+{
+    key = "певица" | "группа" | "музыкант" | "рэпер"
+}

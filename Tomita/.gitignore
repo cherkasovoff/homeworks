@@ -1,0 +1,10 @@
+/tomitaparser.exe
+/mystem.exe
+
+/output/*
+!/output/std_results.txt
+!/output/output.html
+
+
+*.gzt.bin
+*.bin

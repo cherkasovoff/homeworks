@@ -1,0 +1,20 @@
+encoding "utf8";
+
+TTextMinerConfig {
+  Dictionary = "mydic.gzt";
+  Articles = [
+    { Name = "альбом" }        
+  ],
+  Facts = [
+    { Name = "Album" }
+  ],
+  Input = { 
+    File = "input\\Music_albums.txt";
+  }
+  PrettyOutput = "output\\output.html";
+  PrintTree="output\\output_tree.txt";
+  Output = { 
+    File = "output\\output.txt";
+    Format = text; 
+  }
+}
